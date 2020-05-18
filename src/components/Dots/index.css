@@ -1,0 +1,7 @@
+svg {
+  background: #5d5d7e;
+}
+
+circle {
+  transition: transform .3s ease, fill .3s ease;
+}
