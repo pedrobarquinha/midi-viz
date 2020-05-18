@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
+import Svg from './components/Svg/index';
 import Select from './components/Select/index';
+import Line from './components/Line/index';
 import Dots from './components/Dots/index';
 
 import './App.css';
@@ -8,6 +10,8 @@ import './App.css';
 import play from './lib/play';
 
 const vizualizations = ['dots', 'line'];
+const width = 500;
+const height = 500;
 
 function App() {
   const [vizType, setVizType] = useState(vizualizations[0]);
@@ -34,7 +38,7 @@ function App() {
         newNotes = newNotes.slice(1);
       }
 
-      return newNotes;
+      return newNotes.map((note, idx) => ({ ...note, idx }));
     });
   }, []);
 
@@ -65,7 +69,13 @@ function App() {
       <button onClick={clearNotes}>clear</button>
 
       <div className="viz">
-        {vizType === 'dots' ? <Dots notes={notes} /> : <></>}
+        <Svg width={width} height={height}>
+          {vizType === 'dots' ? (
+            <Dots notes={notes} width={width} height={height} />
+          ) : (
+            <Line notes={notes} width={width} height={height} />
+          )}
+        </Svg>
       </div>
     </div>
   );
