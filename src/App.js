@@ -10,8 +10,8 @@ import './App.css';
 import play from './lib/play';
 
 const vizualizations = ['dots', 'line'];
-const width = 500;
-const height = 500;
+const width = 1000;
+const height = 700;
 
 function App() {
   const [vizType, setVizType] = useState(vizualizations[0]);

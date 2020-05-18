@@ -4,22 +4,18 @@ import * as d3 from 'd3';
 import './index.css';
 import { hertzExtent, velocityExtent } from '../../lib/constants';
 
-const width = 500;
-const height = 500;
+function Dots({ notes, height, width }) {
+  const colorScale = d3
+    .scaleLinear()
+    .domain(velocityExtent)
+    .range(['purple', 'yellow']);
+  const yScale = d3.scaleLinear().domain(hertzExtent).range([height, 0]);
 
-const colorScale = d3
-  .scaleLinear()
-  .domain(velocityExtent)
-  .range(['purple', 'yellow']);
-const yScale = d3.scaleLinear().domain(hertzExtent).range([height, 0]);
+  function getAttributesFromMidi(midiMessage) {
+    const { hZ, velocity } = midiMessage || {};
 
-function getAttributesFromMidi(midiMessage) {
-  const { hZ, velocity } = midiMessage || {};
-
-  return { fill: colorScale(velocity), circleY: yScale(hZ) || height / 2 };
-}
-
-function Dots({ notes }) {
+    return { fill: colorScale(velocity), circleY: yScale(hZ) || height / 2 };
+  }
   return (
     <g className="dots">
       {notes.map((midiNote, idx) => {
