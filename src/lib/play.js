@@ -20,6 +20,8 @@ function play(onPlay) {
       onPlay(message);
     });
   });
+
+  return true;
 }
 
 export default play;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import Select from './components/Select/index';
 import Dots from './components/Dots/index';
@@ -11,19 +11,44 @@ const vizualizations = ['dots', 'line'];
 
 function App() {
   const [vizType, setVizType] = useState(vizualizations[0]);
-  const [lastNote, setLastNote] = useState({});
+  const [notes, setNotes] = useState([]);
+  const [numberOfNotes, setNumberOfNotes] = useState(5);
+  const [playing, setPlaying] = useState(false);
+  const numberOfNotesRef = useRef(numberOfNotes);
 
   function handleVizChange({ target: { value: vizType } }) {
     setVizType(vizType);
   }
 
-  function handleNotePlay(noteData) {
-    setLastNote(noteData);
+  function handleNNoteChange({ target: { value: numberOfNotes } }) {
+    setNumberOfNotes(numberOfNotes);
   }
 
-  useEffect(() => {
-    play(handleNotePlay);
+  const handleNotePlay = useCallback(noteData => {
+    if (!noteData.play) return;
+
+    setNotes(notes => {
+      let newNotes = [...notes, noteData];
+
+      if (notes.length >= numberOfNotesRef.current) {
+        newNotes = newNotes.slice(1);
+      }
+
+      return newNotes;
+    });
   }, []);
+
+  const clearNotes = useCallback(() => {
+    setNotes([]);
+  }, []);
+
+  useEffect(() => {
+    numberOfNotesRef.current = numberOfNotes;
+
+    if (!playing) {
+      setPlaying(play(handleNotePlay));
+    }
+  }, [playing, handleNotePlay, numberOfNotes]);
 
   return (
     <div className="App">
@@ -32,9 +57,15 @@ function App() {
         options={vizualizations}
         current={vizType}
       />
+      <Select
+        handleSelect={handleNNoteChange}
+        options={[1, 5, 10, 20, 30]}
+        current={numberOfNotes}
+      />
+      <button onClick={clearNotes}>clear</button>
 
       <div className="viz">
-        {vizType === 'dots' ? <Dots midiMessage={lastNote} /> : <></>}
+        {vizType === 'dots' ? <Dots notes={notes} /> : <></>}
       </div>
     </div>
   );

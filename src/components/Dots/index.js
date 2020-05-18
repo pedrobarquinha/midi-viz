@@ -14,32 +14,35 @@ const velocityExtent = [minVelocity, maxVelocity];
 const width = 500;
 const height = 500;
 
-function Dots({ midiMessage }) {
-  const [circleY, setCircleY] = useState(600);
-  const [circleFill, setCircleFill] = useState('yellow');
+const colorScale = d3
+  .scaleLinear()
+  .domain(velocityExtent)
+  .range(['purple', 'yellow']);
+const yScale = d3.scaleLinear().domain(hertzExtent).range([height, 0]);
 
-  useEffect(() => {
-    const colorScale = d3
-      .scaleLinear()
-      .domain(velocityExtent)
-      .range(['purple', 'red']);
-    const yScale = d3.scaleLinear().domain(hertzExtent).range([height, 0]);
-
+function Dots({ notes }) {
+  function handleMidiMessage(midiMessage) {
     const { hZ, velocity } = midiMessage || {};
 
-    setCircleFill(colorScale(velocity));
-    setCircleY(yScale(hZ) || height / 2);
-  }, [midiMessage]);
+    return { fill: colorScale(velocity), circleY: yScale(hZ) || height / 2 };
+  }
 
   return (
     <svg width={width} height={height}>
       <g className="dots">
-        <circle
-          transform={`translate(${width / 2}, ${circleY})`}
-          r="10"
-          fill={circleFill}
-          stroke="white"
-        />
+        {notes.map((message, idx) => {
+          const { fill, circleY } = handleMidiMessage(message);
+
+          return (
+            <circle
+              key={idx + circleY}
+              transform={`translate(${width / 2}, ${circleY})`}
+              r="10"
+              fill={fill}
+              stroke="white"
+            />
+          );
+        })}
       </g>
     </svg>
   );
