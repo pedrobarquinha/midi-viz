@@ -1,4 +1,27 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MIDI Visualizer
+
+This is a React application that visualizes MIDI input in real-time.  It uses the Web MIDI API to receive MIDI messages and displays them using different visualization types.
+
+## Features
+
+* **Real-time Visualization:** Visualizes MIDI notes as they are played.
+* **Multiple Visualizations:** Choose between "dots" and "line" visualizations.
+* **Configurable Note Count:** Control the number of notes displayed at a time.
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `yarn start`
+
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
+
+
+
 
 ## Available Scripts
 
